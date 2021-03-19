@@ -1,0 +1,97 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>注册</title>	
+		<link rel="stylesheet" href="{% static 'css/amazeui.css' %}" />
+		<link rel="stylesheet" href="{% static 'css/core.css' %}" />
+		<link rel="stylesheet" href="{% static 'css/menu.css' %}" />
+		<link rel="stylesheet" href="{% static 'css/index.css' %}" />
+		<link rel="stylesheet" href="{% static 'css/admin.css' %}" />
+		<link rel="stylesheet" href="{% static 'css/page/typography.css' %}" />
+		<link rel="stylesheet" href="{% static 'css/page/form.css' %}" />
+		<link rel="stylesheet" href="{% static 'css/component.css' %}" />
+	</head>
+	<body>
+		<div class="account-pages ">
+			<div class="wrapper-page ">
+				<div class="text-center">
+	                <a href="/index" class="logo"><span>田园卫士</span></a>
+	            </div>
+	            
+	            <div class="m-t-40 card-box">
+	            	<div class="text-center">
+	                    <h4 class="text-uppercase font-bold m-b-0">注册</h4>
+	                </div>
+	                <div class="panel-body">
+	                	<form class="am-form">
+	                		<div class="am-g">
+	                			<div class="am-form-group">
+							      <input id="username" type="email" class="am-radius"  placeholder="Username">
+							    </div>
+							
+							    <div class="am-form-group form-horizontal m-t-20">
+							      <input id="password" type="password" class="am-radius"  placeholder="Password">
+							    </div>
+							    
+                                <div class="am-form-group form-horizontal m-t-20">
+							      <input id="repassword" type="password" class="am-radius"  placeholder="Re-Enter Password">
+							    </div>
+		                        
+		                        <div class="am-form-group ">
+		                        	<button type="button" class="am-btn am-btn-primary am-radius" style="width: 100%;height: 100%;" onclick="reg()">注册</button>
+		                        </div>
+		                        <div class="am-form-group ">
+		                        <a href="/login" class="text-muted"><i class="fa fa-lock m-r-5"></i> 直接登录</a>
+		                        </div>
+    
+	                		</div>
+
+	                	</form>
+							
+	                </div>
+	            </div>
+			</div>
+		</div>
+        <script type="text/javascript" src="{% static 'js/jquery-2.1.0.js' %}" ></script>
+            <script>
+        function reg() {
+            let username = document.getElementById("username").value
+            let password = document.getElementById("password").value
+            let confirm = document.getElementById("repassword").value
+
+            if (password != confirm)
+            {
+                alert("两次输入密码不同")
+            }
+            else
+            {
+                $.post("/api/register", { username: username, password: password }, function (data, status) {
+                    if (data == 'n')
+                        alert("用户已存在或不合法")
+                    else if (data == 'y')
+                    {
+                        alert("注册成功")
+                        $.post("/api/login", { username: username, password: password }, function (data, status) {
+                            console.log("status:" + data)
+                            if (data != "") {
+                                localStorage.setItem("token", data)
+                                window.location.href = "/index/";
+                            }
+                            else {
+                                alert("账号或密码错误")
+                            }
+                        })
+                    }
+                    else {
+                        alert("?")
+                    }
+                })
+            }
+            
+        }
+    </script>
+	</body>
+</html>
